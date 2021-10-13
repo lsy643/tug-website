@@ -114,7 +114,7 @@ commands:
 jobs:
   verify:
     docker:
-      - image: circleci/node:14.13.0
+      - image: cimg/node:14.13.0
     steps:
       - install-deps
       - dump-env-vars
