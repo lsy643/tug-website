@@ -16,5 +16,19 @@ module.exports = {
       instances: process.env.INSTANCES_NUM,
       exec_mode: 'cluster',
     },
+    {
+      name: 'strapi-preview',
+
+      // Provide the relative address otherwise PM2 cannot identify the next command
+      script: 'packages/strapi/node_modules/.bin/strapi',
+      args: 'dev',
+
+      // `cwd` is used for resolving a symlink related issue mentioned below:
+      // https://pm2.keymetrics.io/docs/tutorials/capistrano-like-deployments#the-main-issue
+      // Otherwise, PM2 will readlink first and break the server reload.
+      cwd: process.env.PWD,
+      instances: process.env.INSTANCES_NUM,
+      exec_mode: 'cluster',
+    },
   ],
 };
