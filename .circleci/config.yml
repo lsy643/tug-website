@@ -99,6 +99,10 @@ commands:
             - run: |
                 ssh-keyscan "${HOST_PREVIEW_IP}" >> ~/.ssh/known_hosts 2>/dev/null
                 INSTANCES_NUM=1 npm run deploy:<< parameters.stage >>
+            - run: |
+                rsync -avz --progress --delete deploy/ ${HOST_PREVIEW_USER}@${HOST_PREVIEW_IP}:/home/tug-website/preview/deploy
+                /deploy/build_cms_docker_image.sh ${DOCKER_REGISTRY_ADDRESS} ${DOCKER_REGISTRY_USR} ${DOCKER_REGISTRY_PWD} ${DOCKER_IMAGE_ADDRESS} preview ${CIRCLE_SHA1}
+                ssh ${HOST_PREVIEW_USER}@${HOST_PREVIEW_IP} bash /home/tug-website/preview/deploy/deploy_cms.sh ${DOCKER_REGISTRY_ADDRESS} ${DOCKER_REGISTRY_USR} ${DOCKER_REGISTRY_PWD} ${DOCKER_IMAGE_ADDRESS} preview ${CIRCLE_SHA1}
       - when:
           condition:
             equal: [<< parameters.stage >>, 'production']
