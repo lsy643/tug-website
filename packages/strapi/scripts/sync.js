@@ -29,11 +29,20 @@ const SYNC_APIS = [
   });
 
   SYNC_APIS.map(async (api) => {
-    const r = await sourceClient.get(api);
+    let r;
+    try {
+      r = await sourceClient.get(api);
+    } catch (err) {
+      log(`${chalk.blueBright(`${api}`)} get source data err: ${chalk.redBright(`${JSON.stringify(err, null, 2)}`)}`);
+    }
 
-    await localClient.put(api, {
-      data: r.data,
-    });
+    try {
+      await localClient.put(api, {
+        data: r.data,
+      });
+    } catch (err) {
+      log(`${chalk.blueBright(`${api}`)} set local data err: ${chalk.redBright(`${JSON.stringify(err, null, 2)}`)}`);
+    }
 
     log(`${chalk.blueBright(`${api}`)} ${chalk.green('has been synced successfully!')}`);
   });
